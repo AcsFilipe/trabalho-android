@@ -17,12 +17,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextClock;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
+import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Locale;
 
 
 import nl.dionsegijn.pixelate.Pixelate;
@@ -37,6 +45,7 @@ public class MainActivity extends AppCompatActivity  {
     Bitmap bmp;
     Matrix matrix;
     String  cameraFilePath;
+    TextClock clock;
 
 
     @Override
@@ -91,7 +100,7 @@ public class MainActivity extends AppCompatActivity  {
                         .setDensity(120)
                         .make();
 
-                  try {
+                 try {
 
                     Bitmap bm = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
                     Thread.sleep(2000);
@@ -101,7 +110,7 @@ public class MainActivity extends AppCompatActivity  {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
                       e.printStackTrace();
-                  }
+                 }
 
                         //storeImage(bmp);
             }
@@ -155,6 +164,10 @@ public class MainActivity extends AppCompatActivity  {
     //Salvar
      private void galleryAddPic(Bitmap bitmap )  throws PackageManager.NameNotFoundException {
 
+         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.US);
+         String hour = format.format(new Date());
+
+
         if (Build.VERSION.SDK_INT >= 23) {
              if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
              }
@@ -164,7 +177,7 @@ public class MainActivity extends AppCompatActivity  {
          }
 
          String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-         File mypath = new File(finalPath,"profile.jpg");
+         File mypath = new File(finalPath,  hour + ".jpg");
 
          FileOutputStream fos = null;
          try {
@@ -188,4 +201,4 @@ public class MainActivity extends AppCompatActivity  {
 
 //https://developer.android.com/training/camera/photobasics
 
-//https://androidexample365.com/simple-android-library-to-pixelate-images-or-certain-areas-of-an-image/?fbclid=IwAR0xbOr8g0r1OjEJBDzHeeJAclYuv1Ss4M6LdESYbxKbud86CN7o-vXSRso
+    //https://androidexample365.com/simple-android-library-to-pixelate-images-or-certain-areas-of-an-image/?fbclid=IwAR0xbOr8g0r1OjEJBDzHeeJAclYuv1Ss4M6LdESYbxKbud86CN7o-vXSRso
