@@ -19,16 +19,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.Clock;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
 
@@ -44,8 +39,6 @@ public class MainActivity extends AppCompatActivity  {
     ImageView mImageView;
     Bitmap bmp;
     Matrix matrix;
-    String  cameraFilePath;
-    TextClock clock;
 
 
     @Override
@@ -62,7 +55,7 @@ public class MainActivity extends AppCompatActivity  {
             public void onClick(View v) {
                 /*|----------------------------------------|
                   | Se system os for> = Masrshmallow,      |
-                  |solicite permissão de tempo de execução |
+                  | solicite permissão de tempo de execução |
                   |----------------------------------------|*/
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -83,10 +76,11 @@ public class MainActivity extends AppCompatActivity  {
                           |-------------------------------|*/
                         openCamera();
                     }
+                }else{
+                    openCamera();
                 }
             }
         });
-
         /*|------------------------|
           |      Button Conveter   |
         /*|------------------------|*/
@@ -94,14 +88,13 @@ public class MainActivity extends AppCompatActivity  {
         mConverter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                // Basta instanciar Pixelate, definir a densidade. Isso irá pixelizar toda a sua imagem.
+                // Pixelizar toda a sua imagem.
 
                  new Pixelate(mImageView)
                         .setDensity(120)
                         .make();
-
+                //Salvar a foto alterada
                  try {
-
                     Bitmap bm = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
                     Thread.sleep(2000);
                     galleryAddPic(bm);
@@ -111,8 +104,7 @@ public class MainActivity extends AppCompatActivity  {
                 } catch (InterruptedException e) {
                       e.printStackTrace();
                  }
-
-                        //storeImage(bmp);
+                 //storeImage(bmp);
             }
         });
     }
@@ -120,8 +112,7 @@ public class MainActivity extends AppCompatActivity  {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult( cameraIntent,0);
     }
-
-    /* |-------------------------------------|
+    /* |------------------------------------|
        |Resultado da permissão de tratamento|
        |------------------------------------|
      */
@@ -161,9 +152,10 @@ public class MainActivity extends AppCompatActivity  {
         }catch(FileNotFoundException e){return null;}
     }
 
-    //Salvar
+    //Salvar a foto
      private void galleryAddPic(Bitmap bitmap )  throws PackageManager.NameNotFoundException {
 
+        // Pegar a Hora  do aparelho para salvar como titulo da imagem
          SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.US);
          String hour = format.format(new Date());
 
@@ -193,9 +185,7 @@ public class MainActivity extends AppCompatActivity  {
                  e.printStackTrace();
              }
          }
-
     }
-
 
 }
 
