@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextClock;
 import android.widget.Toast;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,8 +33,10 @@ import nl.dionsegijn.pixelate.Pixelate;
 public class MainActivity extends AppCompatActivity  {
 
     private  static final int PERMISSION_CODE = 1000;
+    private  static final int RESULT_GALLERY  = 1001;
     Button mCaptureBtn;
     Button mConverter;
+    Button mGallerybtn;
     ImageView mImageView;
     Bitmap bmp;
     Matrix matrix;
@@ -107,6 +108,18 @@ public class MainActivity extends AppCompatActivity  {
                  //storeImage(bmp);
             }
         });
+
+        /*|------------------------|
+          |      Button Galeria    |
+        /*|------------------------|*/
+        mGallerybtn = findViewById(R.id.btnGallery);
+        mGallerybtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                openGallery();
+            }
+        });
+
     }
     private void openCamera(){
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -152,13 +165,17 @@ public class MainActivity extends AppCompatActivity  {
         }catch(FileNotFoundException e){return null;}
     }
 
+    private  void openGallery(){
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, RESULT_GALLERY);
+    }
+
     //Salvar a foto
      private void galleryAddPic(Bitmap bitmap )  throws PackageManager.NameNotFoundException {
 
         // Pegar a Hora  do aparelho para salvar como titulo da imagem
          SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.US);
          String hour = format.format(new Date());
-
 
         if (Build.VERSION.SDK_INT >= 23) {
              if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -186,9 +203,10 @@ public class MainActivity extends AppCompatActivity  {
              }
          }
     }
-
 }
 
-//https://developer.android.com/training/camera/photobasics
 
+//https://stackoverflow.com/questions/6016000/how-to-open-phones-gallery-through-code
+
+//https://developer.android.com/training/camera/photobasics
     //https://androidexample365.com/simple-android-library-to-pixelate-images-or-certain-areas-of-an-image/?fbclid=IwAR0xbOr8g0r1OjEJBDzHeeJAclYuv1Ss4M6LdESYbxKbud86CN7o-vXSRso
